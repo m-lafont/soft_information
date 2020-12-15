@@ -30,6 +30,10 @@ def angle(xa, ya, xb, yb, xc, yc):
     unitvector1=vector1/np.linalg.norm(vector1)
     unitvector2=vector2/np.linalg.norm(vector2)
     prodscal=np.dot(unitvector1,unitvector2)
+    if prodscal<-1:
+        prodscal=-1
+    elif prodscal>1:
+        prodscal=1
     return np.arccos(prodscal)*180/pi
 
 
