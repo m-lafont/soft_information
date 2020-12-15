@@ -17,6 +17,7 @@ We consider the scenario in which 3 beacons are placed respectively at the coord
 - position of 2 : (2,2) (low uncertainty)
 - distance 0-1 : 1.41 (medium uncertainty)
 - distance 1-2 : 1.41 (medium uncertainty)
+- angle 1-2-3 : 180° (low uncertainty)
 These measurements are stored in the `data/si1.json` file.
 
 Run:
