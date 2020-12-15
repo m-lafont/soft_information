@@ -3,7 +3,7 @@
 
 import numpy as np
 from numpy import pi, exp, sqrt, log
-
+Delta_t=1
 
 def normal(x, mean, std):
     """
@@ -36,6 +36,8 @@ def angle(xa, ya, xb, yb, xc, yc):
         prodscal=1
     return np.arccos(prodscal)*180/pi
 
+def velocity(x_a,y_a,x_b,y_b): 
+    return dist(x_a,y_a,x_b,y_b)/Delta_t
 
 def log_normal(x, mean, std):
     """
