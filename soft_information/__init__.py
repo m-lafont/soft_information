@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 from scipy.optimize import minimize
-from .utils import make_logprob_distance, make_logprob_position
+from .utils import make_logprob_distance, make_logprob_position, make_logprob_angle
 
 
 def parse_scenario(file_name):
@@ -13,7 +13,7 @@ def parse_scenario(file_name):
 
 
 def json_parser(si_list):
-    """Convert SI into function that return the likelyhood of a estimation"""
+    """Convert SI into function that return the likelihood of an estimation"""
     si_list_func = []
 
     for si_dict in si_list:
@@ -23,6 +23,8 @@ def json_parser(si_list):
             maker = make_logprob_distance
         elif SI_type == 'position':
             maker = make_logprob_position
+        elif SI_type == 'angle':
+            maker = make_logprob_angle
         logprob_func = maker(**features)
         si_list_func.append(logprob_func)
 

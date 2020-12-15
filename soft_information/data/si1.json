@@ -26,6 +26,16 @@
             "std":1.0
         }
     },
+	{
+        "SI_type": "angle",
+        "features": {
+            "idx_a": 0,
+			"idx_b": 1,
+			"idx_c": 2,
+            "measured_angle": 180,
+            "std":0.1
+        }
+    },
     {
         "SI_type": "distance",
         "features": {

@@ -23,6 +23,15 @@ def dist(xa, ya, xb, yb):
     b = np.array((xb, yb))
     return np.linalg.norm(a-b)
 
+def angle(xa, ya, xb, yb, xc, yc):
+    """returns the angle of the points a, b and c"""
+    vector1=np.array((xa-xb,ya-yb))
+    vector2=np.array((xc-xb,yc-yb))
+    unitvector1=vector1/np.linalg.norm(vector1)
+    unitvector2=vector2/np.linalg.norm(vector2)
+    prodscal=np.dot(unitvector1,unitvector2)
+    return np.arccos(prodscal)*180/pi
+
 
 def log_normal(x, mean, std):
     """
@@ -35,6 +44,18 @@ def log_normal(x, mean, std):
     """
     return -log(std) - (log(2) + log(pi))/2 - (x-mean)**2/(2*std**2)
 
+def logprob_angle(xa, ya, xb, yb, xc, yc, measured_angle, std):
+    """logprob that a, b and c are in (xa,ya),(xb,yb),(xc,yc) under the measured angle.
+    
+    Args:
+        xa: abscissa of point a
+        ya: ordinate of point a
+        xb: abscissa of point b
+        yb: ordinate of point b
+        measured_dist: measured distance between a and b
+        std: standard deviation of the measurement"""
+    points_angle = angle(xa,ya,xb,yb,xc,yc)
+    return log_normal(points_angle, measured_angle, std)
 
 def logprob_distance(xa, ya, xb, yb, measured_dist, std):
     """
@@ -52,6 +73,32 @@ def logprob_distance(xa, ya, xb, yb, measured_dist, std):
     return log_normal(points_dist, measured_dist, std)
 
 
+def make_logprob_angle(idx_a, idx_b, idx_c, measured_angle, std):
+    """
+    Make the function that return the logprob of positions under the measured distance
+
+    Args:
+        idx_a: index of point a
+        idx_b: index of point b
+        idx_c : index of point c
+        measured_angle : measured angle between a b and c
+        std: standard deviation of the measurement
+    """
+    def func(points):
+        """
+        Return the logprob of positions under the measured distance
+
+        Args:
+            points: estimated positions ([[x0, y0, h0], [x1, y1, h1], ...])
+        """
+        xa, ya = points[idx_a]
+        xb, yb = points[idx_b]
+        xc, yc = points[idx_c]
+        return logprob_angle(xa, ya, xb, yb, xc, yc, measured_angle, std)
+
+    return func
+    
+    
 def make_logprob_distance(idx_a, idx_b, measured_dist, std):
     """
     Make the function that return the logprob of positions under the measured distance
@@ -77,6 +124,7 @@ def make_logprob_distance(idx_a, idx_b, measured_dist, std):
 
 
 def make_logprob_position(idx, measured_x, measured_y, std):
+
     """
     Returns the soft position information function that can be applied to the estimated positions
 
