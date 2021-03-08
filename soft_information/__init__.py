@@ -2,8 +2,11 @@ import json
 import os
 import numpy as np
 
+
 from scipy.optimize import minimize
-from .utils import make_logprob_distance, make_logprob_position, make_logprob_angle
+from .utils import make_logprob_distance, make_logprob_position, make_logprob_angle, make_logprob_vitesse, make_logprob_cap
+
+
 
 
 def parse_scenario(file_name):
@@ -25,13 +28,15 @@ def json_parser(si_list):
             maker = make_logprob_position
         elif SI_type == 'angle':
             maker = make_logprob_angle
+        elif SI_type == 'cap':
+            maker = make_logprob_cap
         logprob_func = maker(**features)
         si_list_func.append(logprob_func)
 
     return si_list_func
 
 
-def compute_positions(si_list, nb_points):
+def compute_positions(si_list, nb_points,listepos):
     """
     Return the most likely position considering the si_list and the global logprob function
 
@@ -44,23 +49,29 @@ def compute_positions(si_list, nb_points):
 
     def global_logprob(points):
         """Returns the logprob of a given set of points under all SI"""
-        return np.sum([
+        if listepos==[]:
+             return np.sum([
             si_func(points) for si_func in si_list_func])
+        else:
+             return np.sum([
+            si_func(points) for si_func in si_list_func])+make_logprob_vitesse(points,listepos[len(listepos)-1])
+            
+       
 
-    points = np.random.rand(nb_points, 2)
+    points = np.random.rand(nb_points, 3)
     x0 = np.ravel(points)
 
     # since we use 'minimize', we have to take the opposite
     # of the logprob (I called it unlogprob)
     def unlogprob(x):
         # x shape is (3*nb_points,)
-        points = x.reshape(nb_points, 2)
+        points = x.reshape(nb_points, 3)
         return -global_logprob(points)
 
     # Finds the minima of the func 'unlogprob'
     # which is the most likely distribution of points
     estimated_x = minimize(unlogprob, x0, method='CG').x
 
-    positions = estimated_x.reshape(nb_points, 2)
+    positions = estimated_x.reshape(nb_points, 3)
 
     return positions, global_logprob
