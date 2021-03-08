@@ -27,18 +27,6 @@ def dist(xa, ya, xb, yb):
     b = np.array((xb, yb))
     return np.linalg.norm(a-b)
 
-#def angle(xa, ya, xb, yb, xc, yc): 
-#    """returns the angle of the points a, b and c"""
-#    vector1=np.array((xa-xb,ya-yb))
-#    vector2=np.array((xc-xb,yc-yb))
-#    unitvector1=vector1/np.linalg.norm(vector1)
-#    unitvector2=vector2/np.linalg.norm(vector2)
-#    prodscal=np.dot(unitvector1,unitvector2)
-#    if prodscal<-1:
-#        prodscal=-1
-#    elif prodscal>1:
-#        prodscal=1
-#    return np.arccos(prodscal)*180/pi
 
 def velocity(xa,ya,xb,yb):
     return dist(xa,ya,xb,yb)/delta_t
@@ -165,7 +153,7 @@ def make_logprob_vitesse(pos,posprecedent):
     
 
 
-def make_logprob_position(idx, measured_x, measured_y, measured_h, std):
+def make_logprob_position(idx, measured_x, measured_y, std):
 
     """
     Returns the soft position information function that can be applied to the estimated positions
