@@ -22,26 +22,17 @@
         "features": {
             "idx_a":0,
             "idx_b":1,
-            "measured_dist":1.414,
+            "measured_dist":2.1,
             "std":1.0
         }
     },
-	{
-        "SI_type": "angle",
-        "features": {
-            "idx_a": 0,
-			"idx_b": 1,
-			"idx_c": 2,
-            "measured_angle": 180,
-            "std":0.1
-        }
-    },
+
     {
         "SI_type": "distance",
         "features": {
             "idx_a":1,
             "idx_b":2,
-            "measured_dist":1.414,
+            "measured_dist":0.7,
             "std":1.0
         }
     }
