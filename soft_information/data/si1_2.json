@@ -1,10 +1,19 @@
 [
+    { 
+        "SI_type": "time",
+        "features": {
+            "measured_time":3.0001
+            
+        }
+    },
+    
     {
         "SI_type": "position",
         "features": {
             "idx": 0,
             "measured_x": 0,
             "measured_y": 0,
+            "measured_h": 1.57,
             "std":0.0001
         }
     },
@@ -30,8 +39,10 @@
         "features": {
             "idx_a":0,
             "idx_b":1,
-            "measured_angle":-0.785,
+            "measured_angle":0.785,
             "std":0.000001
         }
     }
+    
+    
 ]
