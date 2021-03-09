@@ -6,7 +6,7 @@ import numpy as np
 from scipy.optimize import minimize
 from .utils import make_logprob_distance, make_logprob_position, make_logprob_angle, make_logprob_vitesse, make_logprob_cap
 
-
+T=[0,0.01]
 
 
 def parse_scenario(file_name):
@@ -24,17 +24,29 @@ def json_parser(si_list):
         features = si_dict["features"]
         if SI_type == 'distance':
             maker = make_logprob_distance
+            logprob_func = maker(**features)
+            si_list_func.append(logprob_func)
         elif SI_type == 'position':
             maker = make_logprob_position
+            logprob_func = maker(**features)
+            si_list_func.append(logprob_func)
         elif SI_type == 'angle':
             maker = make_logprob_angle
+            logprob_func = maker(**features)
+            si_list_func.append(logprob_func)
         elif SI_type == 'cap':
             maker = make_logprob_cap
-        logprob_func = maker(**features)
-        si_list_func.append(logprob_func)
+            logprob_func = maker(**features)
+            si_list_func.append(logprob_func)
+        elif SI_type =='time':
+            t= features['measured_time']
+            T.append(t)            
+    
 
     return si_list_func
 
+def get_time():
+    return T
 
 def compute_positions(si_list, nb_points,listepos):
     """
@@ -53,8 +65,9 @@ def compute_positions(si_list, nb_points,listepos):
              return np.sum([
             si_func(points) for si_func in si_list_func])
         else:
-             return np.sum([
-            si_func(points) for si_func in si_list_func])+make_logprob_vitesse(points,listepos[len(listepos)-1])
+            delta_t= T[-1]-T[-2]
+            return np.sum([
+            si_func(points) for si_func in si_list_func])+make_logprob_vitesse(points,listepos[len(listepos)-1],delta_t)
             
        
 
