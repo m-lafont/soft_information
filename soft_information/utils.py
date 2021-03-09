@@ -54,11 +54,6 @@ def logprob_angle(xa, ya, xb, yb,ha,measured_angle, std):
         measured_dist: measured distance between a and b
         std: standard deviation of the measurement"""
     
-%    if xb>xa:
-%        angle= atan((yb-ya)/(xb-xa))-ha
-%        
-%    else : 
-%        angle= np.pi-atan((yb-ya)/(xb-xa))-ha
     angle= atan2(yb-ya,xb-xa)-ha
     return log_normal(angle, measured_angle, std)
 
