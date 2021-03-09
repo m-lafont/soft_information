@@ -3,7 +3,7 @@
 
 import numpy as np
 from numpy import pi, exp, sqrt, log
-from math import atan 
+from math import atan , atan2
 
 
 delta_t= 1
@@ -54,11 +54,12 @@ def logprob_angle(xa, ya, xb, yb,ha,measured_angle, std):
         measured_dist: measured distance between a and b
         std: standard deviation of the measurement"""
     
-    if xb>xa:
-        angle= atan((yb-ya)/(xb-xa))-ha
-        
-    else : 
-        angle= np.pi-atan((yb-ya)/(xb-xa))-ha
+%    if xb>xa:
+%        angle= atan((yb-ya)/(xb-xa))-ha
+%        
+%    else : 
+%        angle= np.pi-atan((yb-ya)/(xb-xa))-ha
+    angle= atan2(yb-ya,xb-xa)-ha
     return log_normal(angle, measured_angle, std)
 
 def logprob_distance(xa, ya, xb, yb, measured_dist, std):
