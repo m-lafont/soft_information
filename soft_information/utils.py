@@ -3,10 +3,9 @@
 
 import numpy as np
 from numpy import pi, exp, sqrt, log
-from math import atan , atan2
+from math import atan 
+from math import atan2
 
-
-delta_t= 1
 
 
 def normal(x, mean, std):
@@ -27,9 +26,24 @@ def dist(xa, ya, xb, yb):
     b = np.array((xb, yb))
     return np.linalg.norm(a-b)
 
+#def angle(xa, ya, xb, yb, xc, yc): 
+#    """returns the angle of the points a, b and c"""
+#    vector1=np.array((xa-xb,ya-yb))
+#    vector2=np.array((xc-xb,yc-yb))
+#    unitvector1=vector1/np.linalg.norm(vector1)
+#    unitvector2=vector2/np.linalg.norm(vector2)
+#    prodscal=np.dot(unitvector1,unitvector2)
+#    if prodscal<-1:
+#        prodscal=-1
+#    elif prodscal>1:
+#        prodscal=1
+#    return np.arccos(prodscal)*180/pi
 
-def velocity(xa,ya,xb,yb):
-    return dist(xa,ya,xb,yb)/delta_t
+#def velocity(xa,ya,xb,yb):
+#    L=get_time()
+#    n=len(L)
+#    delta_t= L[n-1]-L[n-2]
+#    return dist(xa,ya,xb,yb)/delta_t
 
 
 def log_normal(x, mean, std):
@@ -54,7 +68,12 @@ def logprob_angle(xa, ya, xb, yb,ha,measured_angle, std):
         measured_dist: measured distance between a and b
         std: standard deviation of the measurement"""
     
-    angle= atan2(yb-ya,xb-xa)-ha
+#    if xb>xa:
+#        angle= atan2((yb-ya)/(xb-xa))-ha
+#        
+#    else : 
+#        angle= np.pi-atan((yb-ya)/(xb-xa))-ha
+    angle= atan2((yb-ya),(xb-xa))-ha
     return log_normal(angle, measured_angle, std)
 
 def logprob_distance(xa, ya, xb, yb, measured_dist, std):
@@ -72,19 +91,20 @@ def logprob_distance(xa, ya, xb, yb, measured_dist, std):
     points_dist = dist(xa, ya, xb, yb)
     return log_normal(points_dist, measured_dist, std)
 
-def logprob_velocity(xa,ya,xb,yb,mesured_velocity,std):
-    """
-    
-    Args:
-    mesured_velocity: mesured velocity of the agent
-    xa: abscissa of previous point 
-    ya: ordinante of previous point
-    xb: abscissa of previous point 
-    yb: ordinate of previous point
-    """
-    points_velocity= velocity(xa,ya,xb,yb)
-    return log_normal(points_velocity,mesured_velocity,std)
-        
+#def logprob_velocity(xa,ya,xb,yb,mesured_velocity,std):
+#    """
+#    
+#    Args:
+#    mesured_velocity: mesured velocity of the agent
+#    xa: abscissa of previous point 
+#    ya: ordinante of previous point
+#    xb: abscissa of previous point 
+#    yb: ordinate of previous point
+#    
+#    """
+#    points_velocity= velocity(xa,ya,xb,yb)
+#    return log_normal(points_velocity,mesured_velocity,std)
+#        
 
 
 def make_logprob_angle(idx_a, idx_b, measured_angle, std):
@@ -135,7 +155,9 @@ def make_logprob_distance(idx_a, idx_b, measured_dist, std):
 
     return func
 
-def make_logprob_vitesse(pos,posprecedent):
+def make_logprob_vitesse(pos,posprecedent,delta_t):
+#    delta_t= liste_temps[-1]-liste_temps[-2]
+#    print(delta_t)
     x=pos[0]
     y=pos[1]
     x_precedent=posprecedent[0]
@@ -144,12 +166,15 @@ def make_logprob_vitesse(pos,posprecedent):
     vitesse = distance/delta_t
     if vitesse <= 6 :
         return log(1/7)
-    if vitesse > 6 : 
-        return log((1/7)*exp(-vitesse+6))
+    if vitesse > 6 and vitesse <= 12: 
+        return ((1/7)*exp(-vitesse+6))
+    else : 
+        return 0
+        
     
 
 
-def make_logprob_position(idx, measured_x, measured_y, std):
+def make_logprob_position(idx, measured_x, measured_y, measured_h, std):
 
     """
     Returns the soft position information function that can be applied to the estimated positions
